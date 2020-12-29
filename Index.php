@@ -36,10 +36,11 @@ $resultado = pg_fetch_all(pg_get_result($db));
 </div>
 
 <!-- Header -->
-<header class="w3-container w3-red w3-center" style="padding:128px 16px">
+<header class="w3-container w3-red w3-center" style="padding:128px 14px">
   <h1 class="w3-margin w3-jumbo">Buscador IMDB</h1>
   <p class="w3-xlarge">En esta lista estan las 5 mejor evaluadas peliculas. Para ir al buscador, presionar el boton.</p>
-  <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top" action="buscador.php">Get Started</button>
+  <a href="buscador.php" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Buscador!!</a>
+  <!-- <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top" action="buscador.php">Get Started</button> -->
 </header>
 
 
