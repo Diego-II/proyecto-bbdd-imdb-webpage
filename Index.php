@@ -4,12 +4,10 @@ require_once('lib/db_config.php');
 $db = DbConfig::getConnection();
 
 $query = "select title, year, rating from cc3201.movie order by rating desc limit 5";
-$resultado = pg_prepare($db, "get_top_mov", 'select title, year, rating from cc3201.movie order by rating desc limit 5');
-$resultado = pg_execute($dbconn, "get_top_mov", '');
+$resultado = pg_send_query($db, "select title, year, rating from cc3201.movie order by rating desc limit 5;");
 
-//  $db -> query($query);
 
-// print_r($resultado)
+print_r($resultado);
 ?>
 
 <!DOCTYPE html>
