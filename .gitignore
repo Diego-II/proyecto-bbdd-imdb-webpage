@@ -1,2 +1,4 @@
 *.csv
 *.code-workspace
+\lib\db_config.php
+
