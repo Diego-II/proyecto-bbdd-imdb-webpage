@@ -1,0 +1,115 @@
+<!-- <?php
+require_once('lib/db_config.php');
+require_once('lib/buscador_aux.php');
+
+$db = DbConfig::getConnection();
+
+$query = "select title, year, rating from cc3201.movie order by rating desc limit 5";
+pg_send_query($db, "select title, year, rating from cc3201.movie order by rating desc limit 5;");
+$resultado = pg_fetch_all(pg_get_result($db));
+
+// print_r($resultado)
+
+?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/estilo.css">
+
+<title>
+    Proyecto BBDD: Buscador peliculas IMDB
+</title>
+
+<body>
+<div class="w3-top">
+    <div class="w3-bar w3-red w3-card w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="Index.php" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
+    <a href="buscador.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Buscador</a>
+    </div>
+</div>
+
+<!-- BUSCADOR: -->
+<div class="w3-row-padding w3-padding-64 w3-container">
+    <div class="w3-content">
+        <h1>Buscador:</h1>
+        <h3>En caso de buscar por ano, se ordenara por defecto por rating descendiente.</h3>
+        <form method="post" action="lib/buscador_aux.php" enctype="multipart/form-data"  id="buscador">
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>
+                        Nombre pelicula:
+                    </td>
+                    <td>
+                        <input  type="text" placeholder="Nombre Pelicula" id="nombre-pelicula" name="nombre-pelicula">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Nombre Actor/Actriz:
+                    </td>
+                    <td>
+                        <input  type="text" placeholder="Nombre Actor/Actriz" id="nombre-actor" name="nombre-actor">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Nombre Personaje:
+                    </td>
+                    <td>
+                        <input  type="text" placeholder="Nombre Personaje" id="nombre-personaje" name="nombre-personaje">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Ano pelicula:
+                    </td>
+                    <td>
+                        <input  type="number" placeholder="Ano Personaje" id="ano-pelicula" name="ano-pelicula">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Cantidad de resultados (maximo 50):
+                    </td>
+                    <td>
+                        <input  type="number" placeholder="Cantidad de resultados" id="res-cant" name="res-cant">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Orden resultados:</td>
+                    <td><select id="orden" name="orden">
+                        <optgroup label="Ano de emision">
+                            <option value="year-asc">Ascendente</option>
+                            <option value="year-desc">Descendente</option>
+                        </optgroup>
+                        <optgroup label="Ratin IMDB">
+                            <option value="rat-asc">Ascendente</option>
+                            <option value="rat-desc">Descendente</option>
+                        </optgroup>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button type="submit" name = "submitSol">Buscar!</button>
+                    </td>
+    
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
