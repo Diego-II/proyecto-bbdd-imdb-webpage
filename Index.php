@@ -4,10 +4,11 @@ require_once('lib/db_config.php');
 $db = DbConfig::getConnection();
 
 $query = "select title, year, rating from cc3201.movie order by rating desc limit 5";
-$resultado = pg_send_query($db, "select title, year, rating from cc3201.movie order by rating desc limit 5;");
+pg_send_query($db, "select title, year, rating from cc3201.movie order by rating desc limit 5;");
+$resultado = pg_fetch_all(pg_get_result($db));
 
+// print_r($resultado)
 
-print_r($resultado);
 ?>
 
 <!DOCTYPE html>
@@ -34,15 +35,32 @@ print_r($resultado);
     </div>
 </div>
 
-<!-- <?php  foreach($resultado as $movie => $rows): ?>
-  <?php  foreach($rows as $row): ?>
-        <tr>
-            <td><?=$country;?></td>
-            <td><?=$row['Year'];?></td>
-            <td><?=$row['Value'];?></td>
-        </tr>
-  <?php endforeach;?>
-<?php endforeach;?> -->
+<!-- Header -->
+<header class="w3-container w3-red w3-center" style="padding:128px 16px">
+  <h1 class="w3-margin w3-jumbo">Buscador IMDB</h1>
+  <p class="w3-xlarge">En esta lista estan las 5 mejor evaluadas peliculas. Para ir al buscador, presionar el boton.</p>
+  <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top" action="buscador.php">Get Started</button>
+</header>
+
+
+<?php  
+echo '<table>
+<tr>
+ <td>Nombre</td>
+ <td>Ano</td>
+ <td>Rating</td>
+</tr>';
+
+foreach($resultado as $array)
+{
+echo '<tr>
+    <td>'. $array['title'].'</td>
+    <td>'. $array['year'].'</td>
+    <td>'. $array['rating'].'</td>
+  </tr>';
+}
+echo '</table>';
+?>
 
 
 </body>
