@@ -1,0 +1,5 @@
+conexion: ssh cc3201@cc3201.dcc.uchile.cl -p 325 
+clave: ooPho3bai9ji
+
+Ejemplo de subir archivo:
+scp -r -P 325 file.txt cc3201@cc3201.dcc.uchile.cl:/home/cc3201/
