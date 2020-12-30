@@ -1,43 +1,75 @@
 <?php
 
-if(!isset($_POST['buscador'])) exit('No se recibió el valor a buscar');
-
 require_once 'db_config.php';
 require_once 'func_aux.php';
 
 $db  = DbConfig::getConnection();
 
-$nombre = $_POST['buscador']['nombre-pelicula'];
-$resultado = buscarPorNombre($db, $nombre);
+// Cuando se levanta la solicitud post:
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!empty($_POST["nombre-pelicula"])) {
+        $nombre_pelicula = $_POST["nombre-pelicula"];
+    }  else {
+        $nombre_pelicula = false;
+    }
+    if (!empty($_POST["person"])){
+        $person = $_POST["person"];
+    } else{
+        $person = false;
+    }
+    if (!empty($_POST["ano-pelicula"])){
+        $ano = $_POST["ano-pelicula"];
+    } else{
+        $ano = false;
+    }
+    if(!empty($_POST["res-cant"])){
+        $limit = $_POST["res-cant"];
+    } else{
+        $limit = 10;
+    }
+    $orden = $_POST["orden"]
+}
 
-?>
+if ($nombre_pelicula and $nombre_personaje and $person){
+    switch ($_POST["person"]){
+        case "actor":
+            pg_send_prepare($db, "query1", 'SELECT * FROM cc3201.movie WHERE id IN 
+            (SELECT m_id FROM cc3201.movieactor
+             WHERE role ILIKE %$1%) 
+             and title ILIKE %$2%');
+             break;
+        
+        case "personaje":
+            pg_send_prepare($db, "query2", 'SELECT * FROM cc3201.movie WHERE id IN 
+            (SELECT m_id FROM cc3201.movieactor
+             WHERE role ILIKE %$1%) 
+             and title ILIKE %$2%');
+             break;
+    }
+}
 
-<!DOCTYPE html>
-<html lang="en">
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/estilo.css">
-
-<title>
-    Proyecto BBDD: Buscador peliculas IMDB
-</title>
-
-<body>
-<div class="w3-top">
-    <div class="w3-bar w3-red w3-card w3-left-align w3-large">
-    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-    <a href="Index.php" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
-    <a href="buscador.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Buscador</a>
-    </div>
-</div>
+function buscarPorNombre($db, $nombre){
+    // SELECT id FROM groups WHERE name ILIKE 'Administrator'
+    if (!pg_connection_busy($db)) {
+        pg_send_prepare($db, "my_query", 'SELECT title, year, rating FROM cc3201.movie WHERE title ILIKE $1 order by rating desc limit 10');
+        $res1 = pg_get_result($db);
+      }
+    
+      // Execute the prepared query.  Note that it is not necessary to escape
+      // the string "Joe's Widgets" in any way
+      if (!pg_connection_busy($db)) {
+        pg_send_execute($db, "my_query", array('%'.$nombre.'%'));
+        $res2 = pg_fetch_all(pg_get_result($db));
+      }
+      return $res2;    
+}
 
 
-<?php  
+
+
+$resultado = buscarPorNombre($db, $nombre_pelicula);
+print_r($_POST["orden"]);
+
 echo '<table>
 <tr>
  <td>Nombre</td>
@@ -45,12 +77,11 @@ echo '<table>
  <td>Rating</td>
 </tr>';
 
-foreach($resultado as $array)
-{
+foreach($resultado as $array){
 echo '<tr>
-    <td>'. $array['title'].'</td>
-    <td>'. $array['year'].'</td>
-    <td>'. $array['rating'].'</td>
+    <td>'.$array['title'].'</td>
+    <td>'.$array['year'].'</td>
+    <td>'.$array['rating'].'</td>
   </tr>';
 }
 echo '</table>';

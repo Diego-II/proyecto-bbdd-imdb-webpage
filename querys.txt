@@ -1,0 +1,26 @@
+SELECT title, year, rating 
+FROM cc3201.movie WHERE title ILIKE '%shaw%'
+order by rating desc limit 2;
+
+
+select pname from cc3201.person
+where cc3201.person.id in 
+(select cc3201.movieactor.a_id from cc3201.movieactor where cc3201.movieactor.m_id in 
+ (SELECT id 
+FROM cc3201.movie WHERE title ILIKE '%The Shawshank Redemption%'
+order by rating desc limit 2)) order by pname desc;
+
+select * from cc3201.movie where id in 
+(select m_id from cc3201.moviecrew where id in 
+ (select id from cc3201.person where pname ilike '%andy%')) 
+or id in (select m_id from cc3201.movieactor where id in 
+		  (select id from cc3201.person where pname ilike '%andy%'));
+
+
+SELECT o.*
+FROM mytable t         -- For every row from This table,
+CROSS JOIN mytable o   -- and for every row in the Other (see note #2) table
+WHERE t.id <> o.id     -- such that it is a different row
+  AND o.date > t.date  -- with a date later
+  AND t.id = {id}      -- than a specific row.
+

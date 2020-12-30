@@ -51,19 +51,19 @@ $db = DbConfig::getConnection();
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        Nombre Actor/Actriz:
-                    </td>
-                    <td>
-                        <input  type="text" placeholder="Nombre Actor/Actriz" id="nombre-actor" name="nombre-actor">
+                    <td>Elegir si se busca por actor o actriz o nombre del personaje que interpreta:</td>
+                    <td><select id="act-per" name="act-per">
+                            <option value="actor">Actor/Actriz</option>
+                            <option value="personaje">Personaje</option>                   
+                        </select>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Nombre Personaje:
+                        Nombre Actor/Actriz o Personaje:
                     </td>
                     <td>
-                        <input  type="text" placeholder="Nombre Personaje" id="nombre-personaje" name="nombre-personaje">
+                        <input  type="text" placeholder="Nombre" id="person" name="person">
                     </td>
                 </tr>
                 <tr>
@@ -83,16 +83,16 @@ $db = DbConfig::getConnection();
                     </td>
                 </tr>
                 <tr>
-                    <td>Orden resultados:</td>
+                    <td>Orden resultados (defecto descendiente por rating):</td>
                     <td><select id="orden" name="orden">
-                        <optgroup label="Ano de emision">
-                            <option value="year-asc">Ascendente</option>
-                            <option value="year-desc">Descendente</option>
-                        </optgroup>
                         <optgroup label="Ratin IMDB">
-                            <option value="rat-asc">Ascendente</option>
                             <option value="rat-desc">Descendente</option>
+                            <option value="rat-asc">Ascendente</option>                            
                         </optgroup>
+                        <optgroup label="Ano de emision">
+                            <option value="year-desc">Descendente</option>
+                            <option value="year-asc">Ascendente</option>
+                        </optgroup>                        
                     </select></td>
                 </tr>
                 <tr>
