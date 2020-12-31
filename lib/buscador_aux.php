@@ -4,6 +4,8 @@ require_once 'db_config.php';
 // require_once 'func_aux.php';
 require_once 'buscar_papel.php';
 require_once 'buscar_titulo.php';
+require_once 'buscar_director.php';
+require_once 'buscar_actor.php';
 
 
 // Cuando se levanta la solicitud post:
@@ -28,11 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $limit = 50;    
         } elseif ($_POST['res-cant'] < 0){
             $limit = 10;
-        } elseif (!empty($_POST["res-cant"])){
-            $limit = $_POST["res-cant"];
         } else {
-            $limit = 10;
+            $limit = $_POST["res-cant"];
         }
+    } else{
+        $limit = 10;
     }
     $switch = $_POST["act-per"];
 }
@@ -69,33 +71,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <?php
 
-// switch($busqueda){
-//     case 1:
-//         printbusquedapel(buscarPorNombrePel($db, $nombre_pelicula, $limit));
-//         break;
-//     case 2:
-//         printbusquedaActor(busquedaPorPerson($db, $person, $switch, $limit));
-//         break;
-// }
+print_r($person);
+print_r($switch);
+print_r($nombre_pelicula);
+
 if ($nombre_pelicula){
     $db_titulo  = DbConfig::getConnection();
     printbusquedaTitulo(buscarPorTitulo($db_titulo, $nombre_pelicula, $limit));
 }
+
+
 if ($person){
-    $db_papel  = DbConfig::getConnection();
-    // pg_flush($db_papel);
-    printbusquedapel(buscarPorPapel($db_papel, $person, $limit));
+    if ($switch == "personaje") {
+        $db_papel  = DbConfig::getConnection();
+        printbusquedapel(buscarPorPapel($db_papel, $person, $limit));
+    } elseif ($switch == "director") {
+        $db_director  = DbConfig::getConnection();
+        printbusquedaDirector(buscarPorDirector($db_director, $person, $limit));
+    } elseif ($switch == "actor") {
+        $db_actor  = DbConfig::getConnection();
+        printbusquedaActor(buscarPorActor($db_actor, $person, $limit));
+    }
 }
 
-
-
-// if ($person){
-//     $db2  = DbConfig::getConnection();
-//     $res = buscarPorActor($db2, $person, $limit);
-//     // print_r($res)
-//     printbusquedaActor($res);
-//     print_r($res);
-// }
 
 
 ?>

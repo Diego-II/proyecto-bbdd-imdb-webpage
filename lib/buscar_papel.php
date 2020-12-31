@@ -2,7 +2,11 @@
 
 function buscarPorPapel($db_conn, $nombre, $limit){
     if (!pg_connection_busy($db_conn)) {
-      pg_send_prepare($db_conn, "papel", 'SELECT title, role, rating FROM cc3201.Movie, cc3201.Person, (SELECT m_id, a_id, role FROM cc3201.MovieActor WHERE role iLIKE %1%) Names WHERE Names.a_id = Person.id AND Movie.id = m_id ORDER BY rating DESC');
+      pg_send_prepare($db_conn, "papel", 'SELECT * from cc3201.movie where id in 
+      (SELECT m_id from cc3201.moviecrew where id in 
+       (SELECT id from cc3201.person where pname ilike %1%)) 
+      or id in (SELECT m_id from cc3201.movieactor where id in 
+                (SELECT id from cc3201.person where pname ilike %1%) LIMIT $2');
       $result1 = pg_get_result($db_conn);
     }
   
@@ -12,6 +16,8 @@ function buscarPorPapel($db_conn, $nombre, $limit){
     $result2 = pg_fetch_all(pg_get_result($db_conn));
     return $result2;   
 }
+
+
 
 
 function printbusquedapel($resultado){

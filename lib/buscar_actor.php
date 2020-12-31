@@ -1,10 +1,12 @@
 <?php
 
-function buscarPorTitulo($db_conn, $nombre, $limit){
+function buscarPorActor($db_conn, $nombre, $limit){
   // $db_conn = pg_connection_reset($db_conncon);
   // SELECT id FROM groups WHERE name ILIKE 'Administrator'
   if (!pg_connection_busy($db_conn)) {
-      pg_send_prepare($db_conn, "my_query", 'SELECT title, year, rating FROM cc3201.movie WHERE title ILIKE $1 order by rating desc limit $2');
+      pg_send_prepare($db_conn, "my_query", 'SELECT * FROM cc3201.movie WHERE id IN 
+      (SELECT m_id FROM cc3201.movieactor
+                  WHERE role ILIKE %$1%) LIMIT $2');
       $res1 = pg_get_result($db_conn);
     }
   
@@ -18,7 +20,7 @@ function buscarPorTitulo($db_conn, $nombre, $limit){
 }
 
 
-function printbusquedaTitulo($resultado){
+function printbusquedaActor($resultado){
     echo '<table>
     <tr>
     <td>Titulo de la pelicula</td>
@@ -33,4 +35,4 @@ function printbusquedaTitulo($resultado){
         </tr>';
     }
     echo '</table>';
-  }
+}
