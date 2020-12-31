@@ -71,9 +71,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <?php
 
-print_r($person);
-print_r($switch);
-print_r($nombre_pelicula);
+// print_r($person);
+// print_r($switch);
+// print_r($nombre_pelicula);
 
 if ($nombre_pelicula){
     $db_titulo  = DbConfig::getConnection();
