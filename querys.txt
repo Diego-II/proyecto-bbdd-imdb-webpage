@@ -24,3 +24,63 @@ WHERE t.id <> o.id     -- such that it is a different row
   AND o.date > t.date  -- with a date later
   AND t.id = {id}      -- than a specific row.
 
+
+
+SELECT * FROM cc3201.movie WHERE id IN 
+SELECT m_id FROM cc3201.movieactor
+            WHERE role ILIKE %$1%) 
+            and title ILIKE %$2%'
+
+
+Selector (Actor/Actriz)
+SELECT pname, title
+FROM cc3201.Movie, cc3201.MovieActor,
+(SELECT id, pname
+FROM cc3201.Person
+WHERE pname iLIKE '%input%') Names
+WHERE 
+Names.id = a_id
+AND Movie.id = MovieActor.m_id
+
+Selector (Crew)
+SELECT pname, title
+FROM cc3201.Movie, cc3201.MovieCrew,
+(SELECT id, pname
+FROM cc3201.Person
+WHERE pname iLIKE '%input%') Names
+WHERE 
+Names.id = c_id
+AND Movie.id = MovieCrew.m_id
+
+Selector (Director)
+SELECT pname, title
+FROM cc3201.Movie, cc3201.MovDirector,
+(SELECT id, pname
+FROM cc3201.Person
+WHERE pname iLIKE '%input%') Names
+WHERE 
+Names.id = d_id
+AND Movie.id = MovDirector.m_id
+
+SELECT pname, role, title
+FROM cc3201.Movie, cc3201.MovieActor,
+(SELECT id, pname
+FROM cc3201.Person
+WHERE pname iLIKE %$1%) Names
+WHERE 
+Names.id = a_id
+AND Movie.id = MovieActor.m_id
+ORDER BY pname ASC
+LIMIT $2
+
+
+Buscar por role
+SELECT Names.role, title
+FROM cc3201.Movie, cc3201.Person,
+(SELECT m_id, a_id, role
+FROM cc3201.MovieActor
+WHERE role iLIKE '%victor%') Names
+WHERE 
+Names.a_id = Person.id
+AND Movie.id = Names.m_id
+ORDER BY title ASC

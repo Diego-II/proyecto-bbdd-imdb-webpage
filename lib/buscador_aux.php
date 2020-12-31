@@ -1,9 +1,10 @@
 <?php
 
 require_once 'db_config.php';
-require_once 'func_aux.php';
+// require_once 'func_aux.php';
+require_once 'buscar_papel.php';
+require_once 'buscar_titulo.php';
 
-$db  = DbConfig::getConnection();
 
 // Cuando se levanta la solicitud post:
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -22,67 +23,82 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else{
         $ano = false;
     }
-    if(!empty($_POST["res-cant"])){
-        $limit = $_POST["res-cant"];
-    } else{
-        $limit = 10;
+    if (!empty($_POST["res-cant"])){
+        if ($_POST['limit'] > 51){
+            $limit = 50;    
+        } elseif ($_POST['res-cant'] < 0){
+            $limit = 10;
+        } elseif (!empty($_POST["res-cant"])){
+            $limit = $_POST["res-cant"];
+        } else {
+            $limit = 10;
+        }
     }
-    $orden = $_POST["orden"]
+    $switch = $_POST["act-per"];
 }
 
-if ($nombre_pelicula and $nombre_personaje and $person){
-    switch ($_POST["person"]){
-        case "actor":
-            pg_send_prepare($db, "query1", 'SELECT * FROM cc3201.movie WHERE id IN 
-            (SELECT m_id FROM cc3201.movieactor
-             WHERE role ILIKE %$1%) 
-             and title ILIKE %$2%');
-             break;
-        
-        case "personaje":
-            pg_send_prepare($db, "query2", 'SELECT * FROM cc3201.movie WHERE id IN 
-            (SELECT m_id FROM cc3201.movieactor
-             WHERE role ILIKE %$1%) 
-             and title ILIKE %$2%');
-             break;
-    }
-}
-
-function buscarPorNombre($db, $nombre){
-    // SELECT id FROM groups WHERE name ILIKE 'Administrator'
-    if (!pg_connection_busy($db)) {
-        pg_send_prepare($db, "my_query", 'SELECT title, year, rating FROM cc3201.movie WHERE title ILIKE $1 order by rating desc limit 10');
-        $res1 = pg_get_result($db);
-      }
-    
-      // Execute the prepared query.  Note that it is not necessary to escape
-      // the string "Joe's Widgets" in any way
-      if (!pg_connection_busy($db)) {
-        pg_send_execute($db, "my_query", array('%'.$nombre.'%'));
-        $res2 = pg_fetch_all(pg_get_result($db));
-      }
-      return $res2;    
-}
-
-
-
-
-$resultado = buscarPorNombre($db, $nombre_pelicula);
-print_r($_POST["orden"]);
-
-echo '<table>
-<tr>
- <td>Nombre</td>
- <td>Ano</td>
- <td>Rating</td>
-</tr>';
-
-foreach($resultado as $array){
-echo '<tr>
-    <td>'.$array['title'].'</td>
-    <td>'.$array['year'].'</td>
-    <td>'.$array['rating'].'</td>
-  </tr>';
-}
-echo '</table>';
 ?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/estilo.css">
+
+<title>
+    Proyecto BBDD: Buscador peliculas IMDB
+</title>
+
+<body>
+<div class="w3-top">
+    <div class="w3-bar w3-red w3-card w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="../Index.php" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
+    <a href="../buscador.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Buscador</a>
+    </div>
+</div>
+
+<div class="w3-row-padding w3-padding-64 w3-container">
+<div class="w3-content">
+
+<?php
+
+// switch($busqueda){
+//     case 1:
+//         printbusquedapel(buscarPorNombrePel($db, $nombre_pelicula, $limit));
+//         break;
+//     case 2:
+//         printbusquedaActor(busquedaPorPerson($db, $person, $switch, $limit));
+//         break;
+// }
+if ($nombre_pelicula){
+    $db_titulo  = DbConfig::getConnection();
+    printbusquedaTitulo(buscarPorTitulo($db_titulo, $nombre_pelicula, $limit));
+}
+if ($person){
+    $db_papel  = DbConfig::getConnection();
+    // pg_flush($db_papel);
+    printbusquedapel(buscarPorPapel($db_papel, $person, $limit));
+}
+
+
+
+// if ($person){
+//     $db2  = DbConfig::getConnection();
+//     $res = buscarPorActor($db2, $person, $limit);
+//     // print_r($res)
+//     printbusquedaActor($res);
+//     print_r($res);
+// }
+
+
+?>
+
+</div>
+</div>

@@ -6,6 +6,8 @@ $db = DbConfig::getConnection();
 $query = "select title, year, rating from cc3201.movie order by rating desc limit 5";
 pg_send_query($db, "select title, year, rating from cc3201.movie order by rating desc limit 5;");
 $resultado = pg_fetch_all(pg_get_result($db));
+pg_flush($db);
+pg_close($db);
 
 // print_r($resultado)
 
